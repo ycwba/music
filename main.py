@@ -137,100 +137,108 @@ st.write("""
 # 功能模块展示
 st.markdown("## 主要功能")
 
-col1, col2 = st.columns(2)
-
-with col1:
-    st.markdown("""
-    <div class="feature-card">
-        <div class="feature-icon">📝</div>
-        <div class="feature-title">歌词管理</div>
-        <div class="feature-description">
-            <ul>
-                <li>统一的歌词列表视图</li>
-                <li>支持批量操作（删除、编辑）</li>
-                <li>歌词分类和标签功能</li>
-                <li>搜索和过滤功能</li>
-            </ul>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+# 使用container和label来避免空标签警告
+with st.container():
+    col1, col2 = st.columns(2, gap="large")
     
-    st.markdown("""
-    <div class="feature-card">
-        <div class="feature-icon">🎵</div>
-        <div class="feature-title">智能推荐</div>
-        <div class="feature-description">
-            <ul>
-                <li>基于歌曲内容的智能推荐</li>
-                <li>基于风格的歌曲推荐</li>
-                <li>基于歌手的相似推荐</li>
-                <li>推荐历史记录</li>
-            </ul>
+    with col1:
+        st.markdown("### 左侧功能", help="左侧功能区域")  # 添加标签
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon">📝</div>
+            <div class="feature-title">歌词管理</div>
+            <div class="feature-description">
+                <ul>
+                    <li>统一的歌词列表视图</li>
+                    <li>支持批量操作（删除、编辑）</li>
+                    <li>歌词分类和标签功能</li>
+                    <li>搜索和过滤功能</li>
+                </ul>
+            </div>
         </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon">🎵</div>
+            <div class="feature-title">智能推荐</div>
+            <div class="feature-description">
+                <ul>
+                    <li>基于歌曲内容的智能推荐</li>
+                    <li>基于风格的歌曲推荐</li>
+                    <li>基于歌手的相似推荐</li>
+                    <li>推荐历史记录</li>
+                </ul>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-with col2:
-    st.markdown("""
-    <div class="feature-card">
-        <div class="feature-icon">📊</div>
-        <div class="feature-title">歌词分析</div>
-        <div class="feature-description">
-            <ul>
-                <li>词频统计与可视化</li>
-                <li>词云生成</li>
-                <li>TF-IDF关键词提取</li>
-                <li>风格分布分析</li>
-            </ul>
+    with col2:
+        st.markdown("### 右侧功能", help="右侧功能区域")  # 添加标签
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <div class="feature-title">歌词分析</div>
+            <div class="feature-description">
+                <ul>
+                    <li>词频统计与可视化</li>
+                    <li>词云生成</li>
+                    <li>TF-IDF关键词提取</li>
+                    <li>风格分布分析</li>
+                </ul>
+            </div>
         </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("""
-    <div class="feature-card">
-        <div class="feature-icon">💾</div>
-        <div class="feature-title">数据导入导出</div>
-        <div class="feature-description">
-            <ul>
-                <li>多种导入方式（文件、文本）</li>
-                <li>批量导入功能</li>
-                <li>数据导出为JSON/TXT</li>
-                <li>数据备份与恢复</li>
-            </ul>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon">💾</div>
+            <div class="feature-title">数据导入导出</div>
+            <div class="feature-description">
+                <ul>
+                    <li>多种导入方式（文件、文本）</li>
+                    <li>批量导入功能</li>
+                    <li>数据导出为JSON/TXT</li>
+                    <li>数据备份与恢复</li>
+                </ul>
+            </div>
         </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
 # 系统统计信息
 st.markdown("## 系统统计")
 
-col1, col2, col3 = st.columns(3)
+with st.container():
+    stats_col1, stats_col2, stats_col3 = st.columns(3)
 
-with col1:
-    st.markdown("""
-    <div class="stat-item">
-        <div class="stat-value">{}</div>
-        <div class="stat-label">歌曲总数</div>
-    </div>
-    """.format(len(st.session_state['song_db'])), unsafe_allow_html=True)
+    with stats_col1:
+        st.markdown("### 歌曲统计", help="显示系统中的歌曲总数")  # 添加标签
+        st.markdown("""
+        <div class="stat-item">
+            <div class="stat-value">{}</div>
+            <div class="stat-label">歌曲总数</div>
+        </div>
+        """.format(len(st.session_state['song_db'])), unsafe_allow_html=True)
 
-with col2:
-    artists_count = len(set(song['artist'] for song in st.session_state['song_db'])) if st.session_state['song_db'] else 0
-    st.markdown("""
-    <div class="stat-item">
-        <div class="stat-value">{}</div>
-        <div class="stat-label">歌手数量</div>
-    </div>
-    """.format(artists_count), unsafe_allow_html=True)
+    with stats_col2:
+        st.markdown("### 歌手统计", help="显示系统中的歌手数量")  # 添加标签
+        artists_count = len(set(song['artist'] for song in st.session_state['song_db'])) if st.session_state['song_db'] else 0
+        st.markdown("""
+        <div class="stat-item">
+            <div class="stat-value">{}</div>
+            <div class="stat-label">歌手数量</div>
+        </div>
+        """.format(artists_count), unsafe_allow_html=True)
 
-with col3:
-    styles_count = len(set(st.session_state['cache_styles'].values())) if st.session_state['cache_styles'] else 0
-    st.markdown("""
-    <div class="stat-item">
-        <div class="stat-value">{}</div>
-        <div class="stat-label">风格类型</div>
-    </div>
-    """.format(styles_count), unsafe_allow_html=True)
+    with stats_col3:
+        st.markdown("### 风格统计", help="显示系统中的风格类型数量")  # 添加标签
+        styles_count = len(set(st.session_state['cache_styles'].values())) if st.session_state['cache_styles'] else 0
+        st.markdown("""
+        <div class="stat-item">
+            <div class="stat-value">{}</div>
+            <div class="stat-label">风格类型</div>
+        </div>
+        """.format(styles_count), unsafe_allow_html=True)
 
 # 快速入门指南
 st.markdown("## 快速入门")
@@ -243,23 +251,28 @@ st.write("""
 
 # 页面导航
 st.markdown("## 功能导航")
-col1, col2, col3, col4 = st.columns(4)
+with st.container():
+    nav_col1, nav_col2, nav_col3, nav_col4 = st.columns(4)
 
-with col1:
-    if st.button("📝 管理歌词库", use_container_width=True):
-        st.switch_page("pages/1_lyrics_management.py")
+    with nav_col1:
+        st.markdown("### 管理功能", help="跳转到歌词管理页面")  # 添加标签
+        if st.button("📝 管理歌词库", use_container_width=True):
+            st.switch_page("pages/1_lyrics_management.py")
 
-with col2:
-    if st.button("📊 分析与统计", use_container_width=True):
-        st.switch_page("pages/2_lyrics_analysis.py")
+    with nav_col2:
+        st.markdown("### 分析功能", help="跳转到分析统计页面")  # 添加标签
+        if st.button("📊 分析与统计", use_container_width=True):
+            st.switch_page("pages/2_lyrics_analysis.py")
 
-with col3:
-    if st.button("🎵 相似推荐", use_container_width=True):
-        st.switch_page("pages/3_smart_recommendation.py")
+    with nav_col3:
+        st.markdown("### 推荐功能", help="跳转到智能推荐页面")  # 添加标签
+        if st.button("🎵 相似推荐", use_container_width=True):
+            st.switch_page("pages/3_smart_recommendation.py")
 
-with col4:
-    if st.button("💾 导入与导出", use_container_width=True):
-        st.switch_page("pages/4_data_import_export.py")
+    with nav_col4:
+        st.markdown("### 数据功能", help="跳转到数据导入导出页面")  # 添加标签
+        if st.button("💾 导入与导出", use_container_width=True):
+            st.switch_page("pages/4_data_import_export.py")
 
 # 页脚
 st.markdown("""

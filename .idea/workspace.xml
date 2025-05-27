@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="12029f00-afb5-4149-a0e2-abbdb935c004" name="更改" comment="修复歌曲名提取" />
+    <list default="true" id="12029f00-afb5-4149-a0e2-abbdb935c004" name="更改" comment="修复歌曲名提取">
+      <change afterPath="$PROJECT_DIR$/list.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/CopilotChatHistory.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CopilotChatHistory.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.streamlit/config.toml" beforeDir="false" afterPath="$PROJECT_DIR$/.streamlit/config.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/3_smart_recommendation.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/3_smart_recommendation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recommender.py" beforeDir="false" afterPath="$PROJECT_DIR$/recommender.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -50,17 +59,19 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Python.app.executor": "Run",
     "Python.artist_stats.executor": "Run",
+    "Python.launcher.executor": "Run",
     "Python.main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "模块",
+    "project.structure.last.edited": "项目",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "ml.llm.LLMConfigurable",
@@ -186,7 +197,9 @@
       <workItem from="1748075803836" duration="141000" />
       <workItem from="1748075978769" duration="283000" />
       <workItem from="1748095958401" duration="405000" />
-      <workItem from="1748096378513" duration="324000" />
+      <workItem from="1748096378513" duration="574000" />
+      <workItem from="1748097236073" duration="1000" />
+      <workItem from="1748313772544" duration="49000" />
     </task>
     <task id="LOCAL-00001" summary="修复歌曲名提取">
       <option name="closed" value="true" />

@@ -7,7 +7,7 @@ def parse_user_query(query):
     """
     style = None
     artist = None
-    # 假设风格词都在 style_dict.json 里
+    # 风格词在 style_dict.json 里
     import json
     try:
         with open('style_dict.json', 'r', encoding='utf-8') as f:
@@ -133,44 +133,3 @@ def get_similar_songs(base_song, song_db, n_recommendations=5, consider_style=Tr
     
     # 返回推荐结果
     return [item['song'] for item in results[:n_recommendations]]
-    """
-    lyrics_db: [{"artist": , "title": , "lyrics": , "style": }]
-    user_query: 用户输入
-    返回推荐的歌曲列表
-    """
-    from sklearn.feature_extraction.text import TfidfVectorizer
-    from sklearn.metrics.pairwise import cosine_similarity
-    import numpy as np
-
-    cond = parse_user_query(user_query)
-    results = []
-    filtered_db = []
-    
-    # 风格和歌手过滤
-    for item in lyrics_db:
-        if cond['style'] and item.get('style') != cond['style']:
-            continue
-        if cond['artist'] and cond['artist'] not in item.get('artist', ''):
-            continue
-        filtered_db.append(item)
-    
-    if not filtered_db:
-        return []
-    
-    # 使用TF-IDF计算语义相似性
-    vectorizer = TfidfVectorizer()
-    lyrics_texts = [item['lyrics'] for item in filtered_db]
-    query_text = ' '.join(cond['keywords']) if cond['keywords'] else user_query
-    tfidf_matrix = vectorizer.fit_transform(lyrics_texts + [query_text])
-    
-    # 计算余弦相似度
-    similarities = cosine_similarity(tfidf_matrix[-1:], tfidf_matrix[:-1])[0]
-    
-    for idx, item in enumerate(filtered_db):
-        item = dict(item)  # 拷贝，避免污染原数据
-        item['match_count'] = similarities[idx]
-        results.append(item)
-    
-    # 按相似度降序排序
-    results.sort(key=lambda x: x.get('match_count', 0), reverse=True)
-    return results[:10]  # 最多推荐10首

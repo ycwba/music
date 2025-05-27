@@ -5,6 +5,7 @@ import numpy as np
 from recommender import get_similar_songs
 from style_classifier import classify_style, load_style_dict
 from lyrics_analyzer import clean_lyrics
+import requests
 
 st.set_page_config(
     page_title="智能推荐", 
@@ -80,20 +81,27 @@ def get_song_style(song):
         st.session_state['cache_styles'][song['id']] = classify_style(cleaned_lyric, load_style_dict())[0]
     return st.session_state['cache_styles'][song['id']]
 
-def add_to_history(base_song, recommended_songs):
+def add_to_history(base_song, recommended_songs, mode="song_based", filters=None):
     """添加推荐记录到历史"""
-    st.session_state['recommendation_history'].append({
+    history_entry = {
         'timestamp': datetime.now(),
-        'base_song': base_song,
+        'mode': mode,
         'recommended_songs': recommended_songs
-    })
+    }
+    
+    if mode == "song_based":
+        history_entry['base_song'] = base_song
+    else:  # multi_filter
+        history_entry['filters'] = filters
+    
+    st.session_state['recommendation_history'].append(history_entry)
     # 只保留最近20条记录
     if len(st.session_state['recommendation_history']) > 20:
         st.session_state['recommendation_history'] = st.session_state['recommendation_history'][-20:]
 
 # 检查是否有数据
 if not st.session_state['song_db']:
-          st.info("暂无歌词数据。请在'数据导入导出'页面添加歌词。")
+    st.info("暂无歌词数据。请在'数据导入导出'页面添加歌词。")
 else:
     # 创建两列布局
     col1, col2 = st.columns([2, 3])
@@ -140,20 +148,21 @@ else:
                     )
                     
                     # 添加到历史记录
-                    add_to_history(base_song, recommended)
+                    add_to_history(base_song, recommended, mode="song_based")
                     
                     # 显示推荐结果
                     st.write("### 推荐结果")
                     for i, rec in enumerate(recommended, 1):
-                        st.write(f"{i}. **{rec['title']}** - {rec['artist']}")
+                        encoded_title = requests.utils.quote(rec['title'])
+                        st.write(f"{i}. **[{rec['title']}](https://www.last.fm/search?q={encoded_title})** - {rec['artist']}")
                         st.write(f"   风格：{get_song_style(rec)}")
                         with st.expander("查看歌词"):
                             st.text(rec['lyric'])
 
         else:  # 多重筛选模式
-            col1, col2 = st.columns(2)
+            col1_inner, col2_inner = st.columns(2)
             
-            with col1:
+            with col1_inner:
                 # 歌手多选
                 selected_artists = st.multiselect(
                     "选择歌手(可多选)", 
@@ -161,7 +170,7 @@ else:
                     default=None
                 )
             
-            with col2:
+            with col2_inner:
                 # 风格多选
                 selected_styles = st.multiselect(
                     "选择风格(可多选)",
@@ -218,35 +227,65 @@ else:
                         filtered_songs,
                         size=actual_recommendations,
                         replace=False
-                    )
+                    ).tolist()
+                    
+                    # 准备筛选条件信息用于历史记录
+                    filters = {
+                        'artists': selected_artists if selected_artists else [],
+                        'styles': selected_styles if selected_styles else []
+                    }
+                    
+                    # 添加到历史记录
+                    add_to_history(None, recommended, mode="multi_filter", filters=filters)
                     
                     # 显示推荐结果
                     st.write(f"### 为您推荐 {actual_recommendations} 首歌曲")
                     for i, rec in enumerate(recommended, 1):
-                        cols = st.columns([1, 4])
-                        with cols[0]:
-                            st.write(f"**{i}.**")
-                        with cols[1]:
-                            st.write(f"**{rec['title']}**")
-                            st.write(f"歌手: {rec['artist']}")
-                            st.write(f"风格: {get_song_style(rec)}")
-                            with st.expander("查看歌词"):
-                                st.text(rec['lyric'][:200] + ("..." if len(rec['lyric']) > 200 else ""))
+                        encoded_title = requests.utils.quote(rec['title'])
+                        st.write(f"{i}. **[{rec['title']}](https://www.last.fm/search?q={encoded_title})** - {rec['artist']}")
+                        st.write(f"   风格：{get_song_style(rec)}")
+                        with st.expander("查看歌词"):
+                            st.text(rec['lyric'])
 
     with col2:
         st.subheader("推荐历史")
         
         if st.session_state['recommendation_history']:
             for history in reversed(st.session_state['recommendation_history']):
+                # 根据推荐模式生成不同的标题
+                if history['mode'] == "song_based":
+                    title = f"基于《{history['base_song']['title']}》的推荐"
+                else:  # multi_filter
+                    filter_parts = []
+                    if history['filters']['artists']:
+                        filter_parts.append(f"歌手: {', '.join(history['filters']['artists'])}")
+                    if history['filters']['styles']:
+                        filter_parts.append(f"风格: {', '.join(history['filters']['styles'])}")
+                    filter_desc = " | ".join(filter_parts) if filter_parts else "全部歌曲"
+                    title = f"多重筛选推荐 ({filter_desc})"
+                
                 with st.expander(
-                    f"基于《{history['base_song']['title']}》的推荐 "
-                    f"({history['timestamp'].strftime('%Y-%m-%d %H:%M')})"
+                    f"{title} - {history['timestamp'].strftime('%Y-%m-%d %H:%M')}"
                 ):
-                    st.write("基准歌曲：")
-                    st.write(f"- **{history['base_song']['title']}** - "
-                            f"{history['base_song']['artist']}")
-                    st.write("推荐歌曲：")
+                    # 显示推荐条件
+                    if history['mode'] == "song_based":
+                        st.write("**基准歌曲：**")
+                        base_song = history['base_song']
+                        encoded_title = requests.utils.quote(base_song['title'])
+                        st.write(f"- **[{base_song['title']}](https://www.last.fm/search?q={encoded_title})** - "
+                                f"{base_song['artist']}")
+                    else:
+                        st.write("**筛选条件：**")
+                        if history['filters']['artists']:
+                            st.write(f"- 歌手: {', '.join(history['filters']['artists'])}")
+                        if history['filters']['styles']:
+                            st.write(f"- 风格: {', '.join(history['filters']['styles'])}")
+                        if not history['filters']['artists'] and not history['filters']['styles']:
+                            st.write("- 无特定筛选条件（全部歌曲）")
+                    
+                    st.write("**推荐歌曲：**")
                     for i, rec in enumerate(history['recommended_songs'], 1):
-                        st.write(f"{i}. **{rec['title']}** - {rec['artist']}")
+                        encoded_title = requests.utils.quote(rec['title'])
+                        st.write(f"{i}. **[{rec['title']}](https://www.last.fm/search?q={encoded_title})** - {rec['artist']}")
         else:
             st.info("暂无推荐历史记录")

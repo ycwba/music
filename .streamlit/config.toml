@@ -1,7 +1,3 @@
-[global]
-# 设置语言为中文
-language = "zh"
-
 [theme]
 # 主题设置
 primaryColor = "#ff4b4b"

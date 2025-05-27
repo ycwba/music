@@ -1,0 +1,41 @@
+Folder PATH listing
+Volume serial number is 241F-05A5
+C:.
+│   artist_stats.py
+│   list.txt
+│   lyrics_analyzer.py
+│   main.py
+│   README.md
+│   recommender.py
+│   requirements.txt
+│   run_app.py
+│   style_classifier.py
+│   style_dict.json
+│   
+├───.idea
+│       CopilotChatHistory.xml
+│       misc.xml
+│       vcs.xml
+│       workspace.xml
+│       
+├───.streamlit
+│       config.toml
+│       
+├───.vscode
+│       extensions.json
+│       
+├───pages
+│       1_lyrics_management.py
+│       2_lyrics_analysis.py
+│       3_smart_recommendation.py
+│       4_data_import_export.py
+│       
+└───__pycache__
+        artist_stats.cpython-311.pyc
+        lyrics_analyzer.cpython-311.pyc
+        lyrics_analyzer.cpython-312.pyc
+        recommender.cpython-311.pyc
+        recommender.cpython-312.pyc
+        style_classifier.cpython-311.pyc
+        style_classifier.cpython-312.pyc
+        
